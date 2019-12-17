@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup important system stuff
+ConditionACPower=true
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/duplicity-backup-runner
+

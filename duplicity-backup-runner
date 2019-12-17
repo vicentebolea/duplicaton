@@ -1,0 +1,39 @@
+#!/bin/bash
+# Setup those vars at /etc/environment
+# PASSPHRASE=
+# GS_ACCESS_KEY_ID=
+# GS_SECRET_ACCESS_KEY=
+# GS_REMOTE=
+
+OUTPUT=file:///backup/system
+PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
+
+set -x
+INCLUDE=(
+  "/etc"
+  "/usr/local"
+  "/var/lib/"
+  "/var/adm/"
+  "/var/mail/"
+  "/var/log/"
+)
+
+EXCLUDE=(
+  "/var/lib/lxcfs"
+)
+
+CACHE_DIR=/tmp/duplicity-cache
+PERIOD=3M
+
+INCLUDES_ARGS=
+for path in "${INCLUDE[@]}"; do
+  INCLUDES_ARGS="--include $path $INCLUDES_ARGS"
+done
+
+EXCLUDES_ARGS=
+for path in "${EXCLUDE[@]}"; do
+  EXCLUDES_ARGS="--exclude $path $EXCLUDES_ARGS"
+done
+
+duplicity --archive-dir $CACHE_DIR --full-if-older 1M $INCLUDES_ARGS $EXCLUDES_ARGS --exclude '**' / $OUTPUT
+duplicity remove-older-than $PERIOD $OUTPUT
