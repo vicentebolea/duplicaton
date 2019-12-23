@@ -5,7 +5,7 @@
 # GS_SECRET_ACCESS_KEY=
 # GS_REMOTE=
 
-OUTPUT=file:///backup/system
+OUTPUT=${DUPLICITY_OUTPUT:-file:///backup/system}
 PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
 
 set -x

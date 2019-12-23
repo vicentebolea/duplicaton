@@ -1,0 +1,1 @@
+KERNEL=="sd*", ATTRS{model}=="@MODEL@", ATTRS{serial}=="@SERIAL@", RUN+="/usr/local/bin/duplicity-backup-runner"
