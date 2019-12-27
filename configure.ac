@@ -3,7 +3,10 @@ AC_INIT([system-backup],
         [vicente.bolea@gmail.com], 
         [], [])
 
-AC_CONFIG_FILES([99-udev-backer.rules])
-AC_SUBST([MODEL],123)
-AC_SUBST([SERIAL],456)
+AC_ARG_VAR([USER], [User of the session])
+AC_ARG_VAR([LABEL], [Name of the partition label to where store backups])
+
+test -z $LABEL && LABEL=backup
+
+AC_CONFIG_FILES([system-backup.service])
 AC_OUTPUT

@@ -5,8 +5,9 @@
 # GS_SECRET_ACCESS_KEY=
 # GS_REMOTE=
 
+PREFIX=${DUPLICITY_PREFIX:-/.snapshots/backup}
 OUTPUT=${DUPLICITY_OUTPUT:-file:///backup/system}
-PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
+export PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
 
 set -x
 INCLUDE=(
@@ -15,11 +16,12 @@ INCLUDE=(
   "/var/lib/"
   "/var/adm/"
   "/var/mail/"
-  "/var/log/"
 )
 
 EXCLUDE=(
   "/var/lib/lxcfs"
+  "/var/lib/docker"
+  "/var/lib/flatpak"
 )
 
 CACHE_DIR=/tmp/duplicity-cache
@@ -27,13 +29,21 @@ PERIOD=3M
 
 INCLUDES_ARGS=
 for path in "${INCLUDE[@]}"; do
-  INCLUDES_ARGS="--include $path $INCLUDES_ARGS"
+  INCLUDES_ARGS="--include $PREFIX/$path $INCLUDES_ARGS"
 done
 
 EXCLUDES_ARGS=
 for path in "${EXCLUDE[@]}"; do
-  EXCLUDES_ARGS="--exclude $path $EXCLUDES_ARGS"
+  EXCLUDES_ARGS="--exclude $PREFIX/$path $EXCLUDES_ARGS"
 done
 
-duplicity --archive-dir $CACHE_DIR --full-if-older 1M $INCLUDES_ARGS $EXCLUDES_ARGS --exclude '**' / $OUTPUT
+if btrfs subvolume show /.snapshots/backup; then
+  btrfs subvolume delete /.snapshots/backup
+fi
+
+btrfs subvolume snapshot -r / /.snapshots/backup
+
+duplicity  --archive-dir $CACHE_DIR --full-if-older 1M $INCLUDES_ARGS $EXCLUDES_ARGS --exclude '**' $PREFIX/ $OUTPUT
 duplicity remove-older-than $PERIOD $OUTPUT
+
+btrfs subvolume delete /.snapshots/backup

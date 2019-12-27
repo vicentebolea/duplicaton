@@ -1,9 +1,12 @@
 [Unit]
 Description=Backup important system stuff
 ConditionACPower=true
-After=local-fs.target
+After=run-media-@USER@-@LABEL@.mount
+Requires=run-media-@USER@-@LABEL@.mount
 
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/duplicity-backup-runner
 
+[Install]
+WantedBy=run-media-@USER@-@LABEL@.mount
