@@ -6,6 +6,7 @@ Requires=run-media-@USER@-@LABEL@.mount
 
 [Service]
 Type=oneshot
+Environment="DUPLICITY_OUTPUT=file:///run/media/@USER@/@LABEL@/system-backup"
 ExecStart=/usr/local/bin/duplicity-backup-runner
 
 [Install]

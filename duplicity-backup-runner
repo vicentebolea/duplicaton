@@ -5,45 +5,34 @@
 # GS_SECRET_ACCESS_KEY=
 # GS_REMOTE=
 
+USE_BTRFS=${DUPLICITY_USE_BTRFS:-true}
 PREFIX=${DUPLICITY_PREFIX:-/.snapshots/backup}
-OUTPUT=${DUPLICITY_OUTPUT:-file:///backup/system}
+OUTPUT=${DUPLICITY_OUTPUT:-file:///run/media/vicente/backup/system}
 export PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
-
-set -x
-INCLUDE=(
-  "/etc"
-  "/usr/local"
-  "/var/lib/"
-  "/var/adm/"
-  "/var/mail/"
-)
-
-EXCLUDE=(
-  "/var/lib/lxcfs"
-  "/var/lib/docker"
-  "/var/lib/flatpak"
-)
 
 CACHE_DIR=/tmp/duplicity-cache
 PERIOD=3M
 
-INCLUDES_ARGS=
-for path in "${INCLUDE[@]}"; do
-  INCLUDES_ARGS="--include $PREFIX/$path $INCLUDES_ARGS"
-done
+set -x
 
-EXCLUDES_ARGS=
-for path in "${EXCLUDE[@]}"; do
-  EXCLUDES_ARGS="--exclude $PREFIX/$path $EXCLUDES_ARGS"
-done
+if [ "$USE_BTRFS" = "true" ]; then
+  if btrfs subvolume show /.snapshots/backup; then
+    btrfs subvolume delete /.snapshots/backup
+  fi
 
-if btrfs subvolume show /.snapshots/backup; then
-  btrfs subvolume delete /.snapshots/backup
-fi
+  btrfs subvolume snapshot / /.snapshots/backup
+  mount --bind /run/media/vicente/backup/ /.snapshots/backup/run/
+  mount --bind /dev/ /.snapshots/backup/dev/
+  OUTPUT="file:///run/system/"
+fi 
 
-btrfs subvolume snapshot -r / /.snapshots/backup
-
-duplicity  --archive-dir $CACHE_DIR --full-if-older 1M $INCLUDES_ARGS $EXCLUDES_ARGS --exclude '**' $PREFIX/ $OUTPUT
+chroot $PREFIX /usr/bin/duplicity --archive-dir $CACHE_DIR --full-if-older 1M $INCLUDES_ARGS $EXCLUDES_ARGS --include-filelist /etc/system-backup.conf / $OUTPUT
 duplicity remove-older-than $PERIOD $OUTPUT
 
-btrfs subvolume delete /.snapshots/backup
+if [ "$USE_BTRFS" = "true" ]; then
+  umount /.snapshots/backup/run/
+  umount /.snapshots/backup/dev/
+  btrfs subvolume delete /.snapshots/backup
+fi 
+
+sync
