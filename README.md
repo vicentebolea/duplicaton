@@ -4,13 +4,23 @@ Attempt to automatize duplicity backups for laptops (now with systemD)
 
 ## How to install
 
+Find out the partition UUID of your USB stick (or any other block device).
+
 ```
-autoreconf -i
-./configure LABEL="your partition label"  USER="yourself"
-sudo make install
+→ sudo lsblk -o name,mountpoint,label,size,uuid
+
+NAME     MOUNTPOINT        LABEL      SIZE UUID
+sdb                                 931.5G 
+└─sdb1   /run/media/backup backup   931.5G XXXYYY
+
 ```
 
-## How to use 
+```
+autoreconf -i
+./configure UUID=XXXYYY
+sudo make install
+```
+### Configure it
 
 Modify `/etc/duplicaton.conf` such as:
 
@@ -23,4 +33,13 @@ Modify `/etc/duplicaton.conf` such as:
 - /var/lib
 - **
 ``` 
-1. Mount a partition named _LABEL_
+
+## How to use it
+
+1. Just plug your USB stick (or whatever other device).
+2. Force backup by `sudo systemctl start duplicaton.service`
+
+
+## AUTHORS
+
+- Vicente Adolfo Bolea Sanchez <vicente.bolea@gmail.com>

@@ -7,7 +7,7 @@
 
 USE_BTRFS=${DUPLICITY_USE_BTRFS:-true}
 PREFIX=${DUPLICITY_PREFIX:-/.snapshots/backup}
-OUTPUT=${DUPLICITY_OUTPUT:-file:///run/media/backup}
+OUTPUT=${DUPLICITY_OUTPUT:-file:///run/media/backup/system}
 export PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
 
 CACHE_DIR=/tmp/duplicity-cache
@@ -21,7 +21,7 @@ if [ "$USE_BTRFS" = "true" ]; then
   fi
 
   btrfs subvolume snapshot / /.snapshots/backup
-  mount --bind /run/media/vicente/backup/ /.snapshots/backup/run/
+  mount --bind /run/media/backup/ /.snapshots/backup/run/
   mount --bind /dev/ /.snapshots/backup/dev/
   OUTPUT="file:///run/system/"
 fi 

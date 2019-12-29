@@ -12,4 +12,5 @@ AS_IF([test x"$DUPLICITY_CHECK" != x"yes"], [AC_MSG_ERROR([Please install duplic
 AC_ARG_VAR([UUID], [UUID of the partition])
 
 AC_CONFIG_FILES([edit-fstab.yml])
+AC_CONFIG_FILES([run-media-backup.mount])
 AC_OUTPUT

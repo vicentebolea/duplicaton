@@ -5,6 +5,6 @@
     - name:
       lineinfile:
         path: "/etc/fstab"
-        regexp: '^UUID=\d+\s+/var/media/backup'
+        regexp: '^UUID=.+\s+/run/media/backup'
         line: 'UUID=@UUID@ /run/media/backup ntfs noauto,nofail,x-systemd.automount,x-systemd.idle-timeout=2,x-systemd.device-timeout=2'
 

@@ -1,7 +1,7 @@
 [Unit]
 Description=Backup important system stuff
 ConditionACPower=true
-Requires=duplicaton.mount
+Requires=run-media-backup.mount
 
 [Service]
 Type=oneshot
