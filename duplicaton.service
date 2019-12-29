@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup important system stuff
+ConditionACPower=true
+Requires=duplicaton.mount
+
+[Service]
+Type=oneshot
+#Environment="DUPLICITY_OUTPUT=file:///run/media/@USER@/@LABEL@/duplicaton"
+ExecStart=/usr/local/bin/duplicity-backup-runner

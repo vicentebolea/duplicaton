@@ -1,0 +1,11 @@
+[Unit]
+Description=Duplication partition mount
+
+[Mount]
+What=/dev/disk/by-uuid/@UUID@
+Where=/run/var/backup
+#Type=btrfs
+Options=defaults
+
+[Install]
+WantedBy=multi-user.target

@@ -1,12 +1,9 @@
-AC_INIT([system-backup], 
+AC_INIT([duplicaton], 
         [0.10.0],
         [vicente.bolea@gmail.com], 
         [], [])
 
-AC_ARG_VAR([USER], [User of the session])
-AC_ARG_VAR([LABEL], [Name of the partition label to where store backups])
+AC_ARG_VAR([UUID], [UUID of the partition])
 
-test -z $LABEL && LABEL=backup
-
-AC_CONFIG_FILES([system-backup.service])
+AC_CONFIG_FILES([duplicaton.mount])
 AC_OUTPUT
