@@ -1,4 +1,4 @@
-# DUPLICATON
+# DUPLICATON ![](https://github.com/vicentebolea/duplicaton/workflows/MASTER/badge.svg)
 
 Attempt to automatize duplicity backups for laptops (now with systemD)
 
