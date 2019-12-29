@@ -7,7 +7,7 @@
 
 USE_BTRFS=${DUPLICITY_USE_BTRFS:-true}
 PREFIX=${DUPLICITY_PREFIX:-/.snapshots/backup}
-OUTPUT=${DUPLICITY_OUTPUT:-file:///run/media/vicente/backup/system}
+OUTPUT=${DUPLICITY_OUTPUT:-file:///run/media/backup}
 export PASSPHRASE=${PASSPHRASE:-grfgcnffjbeq}
 
 CACHE_DIR=/tmp/duplicity-cache

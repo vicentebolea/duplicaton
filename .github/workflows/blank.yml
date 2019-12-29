@@ -1,0 +1,26 @@
+name: MASTER
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git clone
+      uses: actions/checkout@v1 
+     
+    - name: Install dependencies
+      run: |
+        sudo apt install -y duplicity ansible autoconf
+
+    - name: Configure Package
+      run: |
+        autoreconf -i
+        ./configure --help
+        ./configure UUID=TESTUUID
+
+    - name: Install Package
+      run: |
+        sudo make install

@@ -3,7 +3,7 @@ Description=Duplication partition mount
 
 [Mount]
 What=/dev/disk/by-uuid/@UUID@
-Where=/run/var/backup
+Where=/run/media/backup
 #Type=btrfs
 Options=defaults
 
